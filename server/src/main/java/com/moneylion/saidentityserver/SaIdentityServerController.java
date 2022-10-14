@@ -41,7 +41,7 @@ public class SaIdentityServerController {
 		try {
 			tokenReview = getTokenReview(token);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		}
 
 		var authenticated = tokenReview.getStatus().getAuthenticated();
