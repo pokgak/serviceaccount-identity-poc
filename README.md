@@ -21,7 +21,8 @@ kubectl get -nclient pod
 kubectl exec -it <pod-name> -- sh
 
 # inside the container
-> wget -qSO- app.server:8081/someResource --header x-client-id:test
+> wget -qSO- app.client:8080/refreshToken
+> wget -qSO- app.server:8081/sendRequestToServer
 ```
 
 ### Server
