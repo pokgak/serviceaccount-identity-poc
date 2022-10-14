@@ -15,7 +15,13 @@ Note: `--namespace k8s.io` needed when using the built image locally in Rancher 
 ```
 cd client
 nerdctl build --namespace k8s.io -t local/sa-identity-client .
-k apply -f infra
+kubectl apply -f infra
+
+kubectl get -nclient pod
+kubectl exec -it <pod-name> -- sh
+
+# inside the container
+> wget -qSO- app.server:8081/someResource --header x-client-id:test
 ```
 
 ### Server
@@ -24,4 +30,20 @@ k apply -f infra
 cd server
 nerdctl build --namespace k8s.io -t local/sa-identity-server .
 k apply -f infra
+
+kubectl get -nserver pod
+kubectl exec -it <pod-name> -- sh
+
+# inside the container
+> wget -qSO- app.client:8080/refreshToken
 ```
+
+### Rebuilding and deploying latest version of the app
+
+Since we're using the `latest` tag instead of specific commit version for the image tag, we have to terminate the current pod so that the new pod will be using the latest image from our local registry:
+
+```
+kubectl rollout -n {client|server} deploy/app
+```
+
+This will restart the Deployment and starts a new pod.
