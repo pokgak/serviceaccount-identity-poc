@@ -48,3 +48,42 @@ kubectl rollout -n {client|server} deploy/app
 ```
 
 This will restart the Deployment and starts a new pod.
+
+### Example Response from TokenReview API
+
+The following snippet is a part of the full TokenReview object returned by the TokenReview API after we sent it the token from the client. I extracted the `status` field from the object.
+
+The `tokenReviewStatus.user.username` contains the namespace and name of the ServiceAccount used by the client. 
+```json
+{
+    "tokenReviewStatus": {
+        "audiences": [
+            "server"
+        ],
+        "authenticated": true,
+        "error": null,
+        "user": {
+            "extra": {
+                "authentication.kubernetes.io/pod-name": [
+                    "app-84cb7b495f-scvbk"
+                ],
+                "authentication.kubernetes.io/pod-uid": [
+                    "82a48992-ab8c-4c68-8816-1e05d52be912"
+                ]
+            },
+            "groups": [
+                "system:serviceaccounts",
+                "system:serviceaccounts:client",
+                "system:authenticated"
+            ],
+            "uid": "fda6b989-3c38-4113-9483-f2a9e8c12edb",
+            "username": "system:serviceaccount:client:client"
+        }
+    }
+}
+```
+
+## Resources
+
+- [Explaination how to use service account tokens for service-to-service authentication](https://learnk8s.io/microservices-authentication-kubernetes)
+- [How AWS uses this feature to build the IRSA for EKS](https://learnk8s.io/authentication-kubernetes#workload-identities-in-kubernetes-how-aws-integrates-iam-with-kubernetes)
