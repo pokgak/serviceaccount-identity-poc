@@ -39,7 +39,7 @@ spec:
         imagePullPolicy: Never
         env:
         - name: SERVER_CONNSTRING
-          value: "http://app.server.svc.cluster.local"
+          value: "http://app.server:8081"
         ports:
         - containerPort: 8080
         volumeMounts:

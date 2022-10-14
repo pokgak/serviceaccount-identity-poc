@@ -10,8 +10,10 @@ import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class SaIdentityClientController {
@@ -47,7 +49,7 @@ public class SaIdentityClientController {
 		logger.info("received request at /sendRequestToServer");
 
 		try {
-			URL url = new URL(System.getenv("SERVER_CONNSTRING"));
+			URL url = new URL(System.getenv("SERVER_CONNSTRING") + "/someResource");
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("X-Client-Id", token);
@@ -76,9 +78,7 @@ public class SaIdentityClientController {
 
 			return "Server response:\n" + content;
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		}
-
-		return "Empty";
 	}
 }
